@@ -9474,9 +9474,11 @@ var App = function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      timerOn: false
+      timerOn: false,
+      newTime: null
     };
     _this.toggleTimer = _this.toggleTimer.bind(_this);
+    _this.addTime = _this.addTime.bind(_this);
     return _this;
   }
 
@@ -9486,16 +9488,33 @@ var App = function (_Component) {
       this.setState({ timerOn: !this.state.timerOn });
     }
   }, {
+    key: 'addTime',
+    value: function addTime() {
+      var timeLeft = sessionStorage.getItem('timeLeft');
+      if (timeLeft !== null && timeLeft <= 45000) {
+        this.setState({ newTime: parseInt(timeLeft) + 15000 });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var header = _react2.default.createElement(_Header2.default, { timerOn: this.state.timerOn });
+      if (this.state.newTime !== null) {
+        header = _react2.default.createElement(_Header2.default, { timerOn: this.state.timerOn, newTime: this.state.newTime });
+      }
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Header2.default, { timerOn: this.state.timerOn }),
+        header,
         _react2.default.createElement(
           'button',
           { onClick: this.toggleTimer },
           'on/off'
+        ),
+        _react2.default.createElement(
+          'button',
+          { onClick: this.addTime },
+          'add time'
         )
       );
     }
@@ -9606,12 +9625,16 @@ var Countdown = function (_Component) {
         timeRemaining: timeRemaining
       });
 
+      sessionStorage.removeItem('timeLeft');
+      sessionStorage.setItem('timeLeft', timeRemaining);
+
       if (countdownComplete) {
         if (this.props.completeCallback) {
           this.props.completeCallback();
           return;
         }
       }
+
       if (this.props.tickCallback) {
         this.props.tickCallback(timeRemaining);
       }
@@ -9687,7 +9710,9 @@ var Header = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
 
-    _this.state = {};
+    _this.state = {
+      initTimeRemaining: 30000
+    };
     return _this;
   }
 
@@ -9696,7 +9721,11 @@ var Header = function (_Component) {
     value: function render() {
       var timerOn = null;
       if (this.props.timerOn) {
-        timerOn = _react2.default.createElement(_Countdown2.default, { initTimeRemaining: 30000, interval: 1000 });
+        if (this.props.newTime) {
+          timerOn = _react2.default.createElement(_Countdown2.default, { initTimeRemaining: this.props.newTime, interval: 1000 });
+        } else {
+          timerOn = _react2.default.createElement(_Countdown2.default, { initTimeRemaining: 30000, interval: 1000 });
+        }
       }
       return _react2.default.createElement(
         'div',

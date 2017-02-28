@@ -53,12 +53,16 @@ class Countdown extends Component {
         timeRemaining: timeRemaining
       });
 
+    sessionStorage.removeItem('timeLeft');
+    sessionStorage.setItem('timeLeft', timeRemaining);
+
     if (countdownComplete) {
       if (this.props.completeCallback) {
         this.props.completeCallback();
         return;
       }
     }
+
     if (this.props.tickCallback) {
       this.props.tickCallback(timeRemaining);
     }
