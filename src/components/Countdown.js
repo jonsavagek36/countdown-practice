@@ -19,7 +19,7 @@ class Countdown extends Component {
     if (this.state.timeoutId) {
       clearTimeout(this.state.timeoutId);
     }
-    this.setState({ prevTime: null, timeRemaining: newProps.initialTimeRemaining });
+    this.setState({ prevTime: null, timeRemaining: newProps.initTimeRemaining });
   }
 
   componentDidUpdate() {

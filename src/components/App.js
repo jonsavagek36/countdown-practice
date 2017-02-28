@@ -5,17 +5,21 @@ import Header from './Header';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      timerOn: false
+    };
+    this.toggleTimer = this.toggleTimer.bind(this);
   }
 
-  completeCallback() {
-    alert('TIMES UP BUDDY');
+  toggleTimer() {
+    this.setState({ timerOn: !this.state.timerOn });
   }
 
   render() {
     return (
       <div>
-        <Header />
+        <Header timerOn={this.state.timerOn} />
+        <button onClick={this.toggleTimer}>on/off</button>
       </div>
     );
   }
